@@ -1,8 +1,8 @@
+import { isNumberObject } from "util/types";
 import { MissingParamError } from "../errors/missing-param-error";
 import { badRequest } from "../helpers/http-helpers";
 import { Controller } from "../protocols/controller";
 import { HttpRequest, HttpResponse } from "../protocols/http";
-
 
 export class ParcelProductController implements Controller {
   handle(request: HttpRequest): HttpResponse {
@@ -13,21 +13,23 @@ export class ParcelProductController implements Controller {
         return badRequest(new MissingParamError(input));
 
     const productInputs: Array<string> = ['code', 'name', 'value'];
+    const { product } = request.body;
 
     for(const input of productInputs)
-      if(!request.body.product[input])
+      if(!product[input])
         return badRequest(new MissingParamError('product.' + input));
 
     const paymentCondictionInputs: Array<string> = ['entryValue', 'parcelsQuantity'];
+    const { paymentCondiction } = request.body;
 
     for(const input of paymentCondictionInputs)
-      if(!request.body.paymentCondiction[input])
+      if(!paymentCondiction[input])
         return badRequest(new MissingParamError('paymentCondiction.' + input));
 
-      return {
-        statusCode: 200,
-        body: "invalid"
-      }
+    return {
+      statusCode: 200,
+      body: 'passed'
+    }
   }
 
 }
