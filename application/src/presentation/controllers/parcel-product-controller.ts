@@ -4,10 +4,19 @@ import { HttpRequest, HttpResponse } from "../protocols/http";
 
 export class ParcelProductController implements Controller {
   handle(request: HttpRequest): HttpResponse {
-    return {
-      statusCode: 400,
-      body: "Something"
-    }
+    const inputs: Array<string> = ['product', 'paymentCondiction'];
+
+    for(const input of inputs)
+      if(!Object.keys(request.body[input]).length)
+        return {
+          statusCode: 400,
+          body: "invalid"
+        }
+
+      return {
+        statusCode: 200,
+        body: "invalid"
+      }
   }
 
 }
