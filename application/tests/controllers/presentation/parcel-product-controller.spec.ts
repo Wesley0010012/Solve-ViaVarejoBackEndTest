@@ -208,4 +208,29 @@ describe('ParcelProductController Test', () => {
     expect(response.statusCode).toBe(400);
     expect(response.body.message).toBe(error.message);
   });
+
+  test('Ensure return 400 if minor or equal to zero product code was provided', () => {
+    const error = new InvalidParamError('product.code');
+
+    const { sut } = makeSut();
+
+    const request: HttpRequest = {
+      body: {
+        product: {
+          code: '0',
+          name: 'any_name',
+          value: 'any_value'
+        },
+        paymentCondiction: {
+          entryValue: '9999',
+          parcelsQuantity: '9999'
+        }
+      }
+    };
+
+    const response: HttpResponse = sut.handle(request);
+
+    expect(response.statusCode).toBe(400);
+    expect(response.body.message).toBe(error.message);
+  });
 });
