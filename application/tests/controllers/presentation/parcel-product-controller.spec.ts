@@ -107,4 +107,29 @@ describe('ParcelProductController Test', () => {
     expect(response.statusCode).toBe(400);
     expect(response.body.message).toBe(error.message);
   });
+
+  test('Should return 400 if no product value was provided', () => {
+    const error = new MissingParamError('product.value');
+
+    const { sut } = makeSut();
+
+    const request: HttpRequest = {
+      body: {
+        product: {
+          code: 'any_code',
+          name: 'any_name',
+          value: ''
+        },
+        paymentCondiction: {
+          entryValue: 9999,
+          parcelsQuantity: 9999
+        }
+      }
+    };
+
+    const response: HttpResponse = sut.handle(request);
+
+    expect(response.statusCode).toBe(400);
+    expect(response.body.message).toBe(error.message);
+  });
 });
