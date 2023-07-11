@@ -7,9 +7,7 @@ describe('ParcelProductController Test', () => {
 
     const request: HttpRequest = {
       body: {
-        product: {
-
-        },
+        product: {},
         paymentCondiction: {
           entryValue: 9999,
           parcelsQuantity: 9999
@@ -20,5 +18,5 @@ describe('ParcelProductController Test', () => {
     const response: HttpResponse = sut.handle(request);
 
     expect(response.statusCode).toBe(400);
-  })
+  });
 });
