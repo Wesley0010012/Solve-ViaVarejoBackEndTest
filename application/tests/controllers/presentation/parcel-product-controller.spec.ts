@@ -284,5 +284,29 @@ describe('ParcelProductController Test', () => {
     expect(response.body.message).toBe(error.message);
   });
 
+  test('Ensure return 400 if invalid paymentCondiction entryValue was provided', () => {
+    const error = new InvalidParamError('paymentCondiction.entryValue');
+
+    const { sut } = makeSut();
+
+    const request: HttpRequest = {
+      body: {
+        product: {
+          code: '1',
+          name: 'any_name',
+          value: '1'
+        },
+        paymentCondiction: {
+          entryValue: 'any_entry',
+          parcelsQuantity: 'any_parcels'
+        }
+      }
+    };
+
+    const response: HttpResponse = sut.handle(request);
+
+    expect(response.statusCode).toBe(400);
+    expect(response.body.message).toBe(error.message);
+  });
 
 });
