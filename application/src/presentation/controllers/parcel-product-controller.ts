@@ -31,10 +31,10 @@ export class ParcelProductController implements Controller {
     const pCode = parseFloat(code);
     const pValue = parseFloat(value);
 
-    if(!pCode || pCode < 0)
+    if(!pCode || pCode <= 0)
       return badRequest(new InvalidParamError('product.code'));
 
-    if(!pValue || pValue < 0)
+    if(!pValue || pValue <= 0)
       return badRequest(new InvalidParamError('product.value'));
 
     return {
