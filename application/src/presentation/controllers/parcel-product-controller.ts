@@ -34,6 +34,9 @@ export class ParcelProductController implements Controller {
     if(!pCode || pCode < 0)
       return badRequest(new InvalidParamError('product.code'));
 
+    if(!pValue || pValue < 0)
+      return badRequest(new InvalidParamError('product.value'));
+
     return {
       statusCode: 200,
       body: 'passed'
