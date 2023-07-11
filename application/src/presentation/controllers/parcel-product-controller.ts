@@ -21,7 +21,7 @@ export class ParcelProductController implements Controller {
     const paymentCondictionInputs: Array<string> = ['entryValue', 'parcelsQuantity'];
 
     for(const input of paymentCondictionInputs)
-      if(!request.body.product[input])
+      if(!request.body.paymentCondiction[input])
         return badRequest(new MissingParamError('paymentCondiction.' + input));
 
       return {
