@@ -2,11 +2,23 @@ import { ParcelProductController } from "../../../src/presentation/controllers/p
 import { MissingParamError } from "../../../src/presentation/errors/missing-param-error";
 import { HttpRequest, HttpResponse } from "../../../src/presentation/protocols/http";
 
+interface SutTypes {
+  sut: ParcelProductController,
+}
+
+const makeSut = (): SutTypes => {
+  const sut = new ParcelProductController;
+
+  return {
+    sut
+  };
+}
+
 describe('ParcelProductController Test', () => {
   test('Should return 400 if no product was provided', () => {
     const error = new MissingParamError('product');
 
-    const sut = new ParcelProductController();
+    const { sut } = makeSut();
 
     const request: HttpRequest = {
       body: {
@@ -27,7 +39,7 @@ describe('ParcelProductController Test', () => {
   test('Should return 400 if no paymentCondiction was provided', () => {
     const error = new MissingParamError('paymentCondiction');
 
-    const sut = new ParcelProductController();
+    const { sut } = makeSut();
 
     const request: HttpRequest = {
       body: {
@@ -44,5 +56,5 @@ describe('ParcelProductController Test', () => {
 
     expect(response.statusCode).toBe(400);
     expect(response.body.message).toBe(error.message);
-  })
+  });
 });
