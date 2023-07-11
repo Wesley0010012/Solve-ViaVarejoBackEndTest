@@ -3,6 +3,7 @@ import { MissingParamError } from "../errors/missing-param-error";
 import { badRequest } from "../helpers/http-helpers";
 import { Controller } from "../protocols/controller";
 import { HttpRequest, HttpResponse } from "../protocols/http";
+import { InvalidParamError } from "../errors/invalid-param-error";
 
 export class ParcelProductController implements Controller {
   handle(request: HttpRequest): HttpResponse {
@@ -25,6 +26,13 @@ export class ParcelProductController implements Controller {
     for(const input of paymentCondictionInputs)
       if(!paymentCondiction[input])
         return badRequest(new MissingParamError('paymentCondiction.' + input));
+
+    const { code, name, value } = product;
+    const pCode = parseFloat(code);
+    const pValue = parseFloat(value);
+
+    if(!pCode || pCode < 0)
+      return badRequest(new InvalidParamError('product.code'));
 
     return {
       statusCode: 200,
