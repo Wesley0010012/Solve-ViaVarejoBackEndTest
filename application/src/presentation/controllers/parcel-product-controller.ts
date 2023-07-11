@@ -12,6 +12,12 @@ export class ParcelProductController implements Controller {
       if(!Object.keys(request.body[input]).length)
         return badRequest(new MissingParamError(input));
 
+    const productInputs: Array<string> = ['code', 'name', 'value'];
+
+    for(const input of productInputs)
+      if(!request.body.product[input])
+        return badRequest(new MissingParamError('product.' + input));
+
       return {
         statusCode: 200,
         body: "invalid"
