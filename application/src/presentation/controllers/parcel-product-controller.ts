@@ -1,3 +1,5 @@
+import { MissingParamError } from "../errors/missing-param-error";
+import { badRequest } from "../helpers/http-helpers";
 import { Controller } from "../protocols/controller";
 import { HttpRequest, HttpResponse } from "../protocols/http";
 
@@ -8,10 +10,7 @@ export class ParcelProductController implements Controller {
 
     for(const input of inputs)
       if(!Object.keys(request.body[input]).length)
-        return {
-          statusCode: 400,
-          body: "invalid"
-        }
+        return badRequest(new MissingParamError(input));
 
       return {
         statusCode: 200,
