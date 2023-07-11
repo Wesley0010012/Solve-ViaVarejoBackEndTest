@@ -37,6 +37,13 @@ export class ParcelProductController implements Controller {
     if(!pValue || pValue <= 0)
       return badRequest(new InvalidParamError('product.value'));
 
+    const { entryValue, parcelsQuantity } = paymentCondiction;
+    const pEntryValue = parseFloat(entryValue);
+    const pParcelsQuantity = parseFloat(parcelsQuantity);
+
+    if(!pEntryValue || pEntryValue < 0)
+      return badRequest(new InvalidParamError('paymentCondiction.entryValue'));
+
     return {
       statusCode: 200,
       body: 'passed'
