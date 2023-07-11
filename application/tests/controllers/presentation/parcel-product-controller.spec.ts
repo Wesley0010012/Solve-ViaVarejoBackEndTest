@@ -23,4 +23,26 @@ describe('ParcelProductController Test', () => {
     expect(response.statusCode).toBe(400);
     expect(response.body.message).toBe(error.message);
   });
+
+  test('Should return 400 if no paymentCondiction was provided', () => {
+    const error = new MissingParamError('paymentCondiction');
+
+    const sut = new ParcelProductController();
+
+    const request: HttpRequest = {
+      body: {
+        product: {
+          code: 123,
+          name: 'any_name',
+          value: 'any_value'
+        },
+        paymentCondiction: {}
+      }
+    };
+
+    const response: HttpResponse = sut.handle(request);
+
+    expect(response.statusCode).toBe(400);
+    expect(response.body.message).toBe(error.message);
+  })
 });
