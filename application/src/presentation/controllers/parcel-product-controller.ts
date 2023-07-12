@@ -4,8 +4,12 @@ import { badRequest } from "../helpers/http-helpers";
 import { Controller } from "../protocols/controller";
 import { HttpRequest, HttpResponse } from "../protocols/http";
 import { InvalidParamError } from "../errors/invalid-param-error";
+import { LoadProductResult } from "../../domain/usecases/load-product-result";
+import { NotFoundedError } from "../errors/not-founded-error";
 
 export class ParcelProductController implements Controller {
+  constructor(private readonly loadProduct: LoadProductResult) {}
+
   async handle(request: HttpRequest): Promise<HttpResponse> {
     const inputs: Array<string> = ['product', 'paymentCondiction'];
 
@@ -46,6 +50,11 @@ export class ParcelProductController implements Controller {
 
     if(!pParcelsQuantity || pParcelsQuantity <= 0)
       return badRequest(new InvalidParamError('paymentCondiction.parcelsQuantity'));
+
+    const productResult = await this.loadProduct.load(pCode);
+
+    if(!productResult)
+      return badRequest(new NotFoundedError('product'));
 
     return {
       statusCode: 200,
