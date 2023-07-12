@@ -433,4 +433,28 @@ describe('ParcelProductController Test', () => {
     expect(response.statusCode).toBe(400);
     expect(response.body.message).toBe(error.message);
   });
+
+  test('Ensure loadProductResult have called with correct product code', async () => {
+    const { sut, loadProductResult } = makeSut();
+
+    const loadProductSpy = jest.spyOn(loadProductResult, 'load');
+
+    const request: HttpRequest = {
+      body: {
+        product: {
+          code: '1',
+          name: 'any_name',
+          value: '1'
+        },
+        paymentCondiction: {
+          entryValue: '1',
+          parcelsQuantity: '1'
+        }
+      }
+    };
+
+    await sut.handle(request);
+
+    expect(loadProductSpy).toHaveBeenCalledWith(parseFloat(request.body.product.code));
+  });
 });
