@@ -1,6 +1,6 @@
 import { isNumberObject } from "util/types";
 import { MissingParamError } from "../errors/missing-param-error";
-import { badRequest } from "../helpers/http-helpers";
+import { badRequest, serverError } from "../helpers/http-helpers";
 import { Controller } from "../protocols/controller";
 import { HttpRequest, HttpResponse } from "../protocols/http";
 import { InvalidParamError } from "../errors/invalid-param-error";
@@ -8,12 +8,14 @@ import { LoadProductResult } from "../../domain/usecases/load-product-result";
 import { NotFoundedError } from "../errors/not-founded-error";
 import { ProductModel } from "../../domain/models/product";
 import { InvalidCompatibilityError } from "../errors/invalid-compatibity-error";
+import { InternalServerError } from "../errors/internal-server-error";
 
 export class ParcelProductController implements Controller {
   constructor(private readonly loadProduct: LoadProductResult) {}
 
   async handle(request: HttpRequest): Promise<HttpResponse> {
-    const inputs: Array<string> = ['product', 'paymentCondiction'];
+    try {
+      const inputs: Array<string> = ['product', 'paymentCondiction'];
 
     for(const input of inputs)
       if(!Object.keys(request.body[input]).length)
@@ -70,6 +72,9 @@ export class ParcelProductController implements Controller {
     return {
       statusCode: 200,
       body: 'passed'
+    }
+    } catch(e: any) {
+      return serverError(new InternalServerError);
     }
   }
 
