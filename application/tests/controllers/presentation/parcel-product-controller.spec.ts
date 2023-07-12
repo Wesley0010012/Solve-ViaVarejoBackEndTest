@@ -1,17 +1,38 @@
+import { ProductModel } from "../../../src/domain/models/product";
+import { LoadProductResult } from "../../../src/domain/usecases/load-product-result";
 import { ParcelProductController } from "../../../src/presentation/controllers/parcel-product-controller";
 import { InvalidParamError } from "../../../src/presentation/errors/invalid-param-error";
 import { MissingParamError } from "../../../src/presentation/errors/missing-param-error";
+import { NotFoundedError } from "../../../src/presentation/errors/not-founded-error";
 import { HttpRequest, HttpResponse } from "../../../src/presentation/protocols/http";
 
 interface SutTypes {
   sut: ParcelProductController,
+  loadProductResult: LoadProductResult
+}
+
+const makeLoadProductResult = (): LoadProductResult => {
+  class LoadProductResultStub implements LoadProductResult {
+    load(productId: number): Promise<ProductModel> | Promise<boolean> {
+      return Promise.resolve({
+        code: 1,
+        name: "valid_name",
+        value: 100
+      });
+    }
+
+  }
+
+  return new LoadProductResultStub;
 }
 
 const makeSut = (): SutTypes => {
-  const sut = new ParcelProductController;
+  const loadProductResult = makeLoadProductResult();
+  const sut = new ParcelProductController(loadProductResult);
 
   return {
-    sut
+    sut,
+    loadProductResult
   };
 }
 
@@ -374,6 +395,35 @@ describe('ParcelProductController Test', () => {
         paymentCondiction: {
           entryValue: '1',
           parcelsQuantity: '0'
+        }
+      }
+    };
+
+    const response: HttpResponse = await sut.handle(request);
+
+    expect(response.statusCode).toBe(400);
+    expect(response.body.message).toBe(error.message);
+  });
+
+  test('Ensure return 400 if product not exists', async () => {
+    const error = new NotFoundedError('product');
+
+    const { sut, loadProductResult } = makeSut();
+
+    jest.spyOn(loadProductResult, 'load').mockImplementationOnce((productId: number): Promise<ProductModel> | Promise<boolean> => {
+      return Promise.resolve(false);
+    });
+
+    const request: HttpRequest = {
+      body: {
+        product: {
+          code: '1',
+          name: 'any_name',
+          value: '1'
+        },
+        paymentCondiction: {
+          entryValue: '1',
+          parcelsQuantity: '1'
         }
       }
     };
