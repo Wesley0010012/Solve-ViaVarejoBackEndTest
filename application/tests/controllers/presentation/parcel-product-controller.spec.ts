@@ -509,5 +509,29 @@ describe('ParcelProductController Test', () => {
     expect(result.body.message).toBe(error.message);
   });
 
+  test('Ensure return 400 if product value was not compatible with request', async () => {
+    const error = new InvalidCompatibilityError('value', 'product');
+
+    const { sut } = makeSut();
+
+    const request: HttpRequest = {
+      body: {
+        product: {
+          code: '1',
+          name: 'valid_name',
+          value: '1'
+        },
+        paymentCondiction: {
+          entryValue: '1',
+          parcelsQuantity: '1'
+        }
+      }
+    };
+
+    const result: HttpResponse = await sut.handle(request);
+
+    expect(result.statusCode).toBe(400);
+    expect(result.body.message).toBe(error.message);
+  });
 
 });
