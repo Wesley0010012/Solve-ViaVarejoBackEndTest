@@ -61,6 +61,9 @@ export class ParcelProductController implements Controller {
     if(productResult.code !== pCode)
       return badRequest(new InvalidCompatibilityError('code', 'product'));
 
+    if(productResult.name !== name)
+      return badRequest(new InvalidCompatibilityError('name', 'product'));
+
     return {
       statusCode: 200,
       body: 'passed'
