@@ -459,7 +459,7 @@ describe('ParcelProductController Test', () => {
     expect(loadProductSpy).toHaveBeenCalledWith(parseFloat(request.body.product.code));
   });
 
-  test('Ensure return 400 if product was not compatible with request', async () => {
+  test('Ensure return 400 if product code was not compatible with request', async () => {
     const error = new InvalidCompatibilityError('code', 'product');
 
     const { sut } = makeSut();
