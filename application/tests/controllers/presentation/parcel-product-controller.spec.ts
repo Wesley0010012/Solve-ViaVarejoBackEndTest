@@ -1,6 +1,7 @@
 import { ProductModel } from "../../../src/domain/models/product";
 import { LoadProductResult } from "../../../src/domain/usecases/load-product-result";
 import { ParcelProductController } from "../../../src/presentation/controllers/parcel-product-controller";
+import { InternalServerError } from "../../../src/presentation/errors/internal-server-error";
 import { InvalidCompatibilityError } from "../../../src/presentation/errors/invalid-compatibity-error";
 import { InvalidParamError } from "../../../src/presentation/errors/invalid-param-error";
 import { MissingParamError } from "../../../src/presentation/errors/missing-param-error";
@@ -531,6 +532,35 @@ describe('ParcelProductController Test', () => {
     const result: HttpResponse = await sut.handle(request);
 
     expect(result.statusCode).toBe(400);
+    expect(result.body.message).toBe(error.message);
+  });
+
+  test('Ensure return 500 if loadProductResult throws', async () => {
+    const error = new InternalServerError();
+
+    const { loadProductResult, sut } = makeSut();
+
+    jest.spyOn(loadProductResult, 'load').mockImplementationOnce((): Promise<LoadProductResult.Result> => {
+      throw new Error('Some error...');
+    });
+
+    const request: HttpRequest = {
+      body: {
+        product: {
+          code: '1',
+          name: 'valid_name',
+          value: '1'
+        },
+        paymentCondiction: {
+          entryValue: '1',
+          parcelsQuantity: '1'
+        }
+      }
+    };
+
+    const result: HttpResponse = await sut.handle(request);
+
+    expect(result.statusCode).toBe(500);
     expect(result.body.message).toBe(error.message);
   });
 
