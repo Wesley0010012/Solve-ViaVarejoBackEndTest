@@ -6,6 +6,8 @@ import { HttpRequest, HttpResponse } from "../protocols/http";
 import { InvalidParamError } from "../errors/invalid-param-error";
 import { LoadProductResult } from "../../domain/usecases/load-product-result";
 import { NotFoundedError } from "../errors/not-founded-error";
+import { ProductModel } from "../../domain/models/product";
+import { InvalidCompatibilityError } from "../errors/invalid-compatibity-error";
 
 export class ParcelProductController implements Controller {
   constructor(private readonly loadProduct: LoadProductResult) {}
@@ -51,10 +53,13 @@ export class ParcelProductController implements Controller {
     if(!pParcelsQuantity || pParcelsQuantity <= 0)
       return badRequest(new InvalidParamError('paymentCondiction.parcelsQuantity'));
 
-    const productResult = await this.loadProduct.load(pCode);
+    const productResult: ProductModel | boolean = await this.loadProduct.load(pCode);
 
     if(!productResult)
       return badRequest(new NotFoundedError('product'));
+
+    if(productResult.code !== pCode)
+      return badRequest(new InvalidCompatibilityError('code', 'product'));
 
     return {
       statusCode: 200,
