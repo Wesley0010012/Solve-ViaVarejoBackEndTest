@@ -6,7 +6,7 @@ import { HttpRequest, HttpResponse } from "../protocols/http";
 import { InvalidParamError } from "../errors/invalid-param-error";
 
 export class ParcelProductController implements Controller {
-  handle(request: HttpRequest): HttpResponse {
+  async handle(request: HttpRequest): Promise<HttpResponse> {
     const inputs: Array<string> = ['product', 'paymentCondiction'];
 
     for(const input of inputs)
