@@ -16,7 +16,7 @@ const makeSut = (): SutTypes => {
 }
 
 describe('ParcelProductController Test', () => {
-  test('Should return 400 if no product was provided', () => {
+  test('Should return 400 if no product was provided', async () => {
     const error = new MissingParamError('product');
 
     const { sut } = makeSut();
@@ -31,13 +31,13 @@ describe('ParcelProductController Test', () => {
       }
     };
 
-    const response: HttpResponse = sut.handle(request);
+    const response: HttpResponse = await sut.handle(request);
 
     expect(response.statusCode).toBe(400);
     expect(response.body.message).toBe(error.message);
   });
 
-  test('Should return 400 if no paymentCondiction was provided', () => {
+  test('Should return 400 if no paymentCondiction was provided', async () => {
     const error = new MissingParamError('paymentCondiction');
 
     const { sut } = makeSut();
@@ -53,13 +53,13 @@ describe('ParcelProductController Test', () => {
       }
     };
 
-    const response: HttpResponse = sut.handle(request);
+    const response: HttpResponse = await sut.handle(request);
 
     expect(response.statusCode).toBe(400);
     expect(response.body.message).toBe(error.message);
   });
 
-  test('Should return 400 if no product code was provided', () => {
+  test('Should return 400 if no product code was provided', async () => {
     const error = new MissingParamError('product.code');
 
     const { sut } = makeSut();
@@ -78,13 +78,13 @@ describe('ParcelProductController Test', () => {
       }
     };
 
-    const response: HttpResponse = sut.handle(request);
+    const response: HttpResponse = await sut.handle(request);
 
     expect(response.statusCode).toBe(400);
     expect(response.body.message).toBe(error.message);
   });
 
-  test('Should return 400 if no product name was provided', () => {
+  test('Should return 400 if no product name was provided', async () => {
     const error = new MissingParamError('product.name');
 
     const { sut } = makeSut();
@@ -103,13 +103,13 @@ describe('ParcelProductController Test', () => {
       }
     };
 
-    const response: HttpResponse = sut.handle(request);
+    const response: HttpResponse = await sut.handle(request);
 
     expect(response.statusCode).toBe(400);
     expect(response.body.message).toBe(error.message);
   });
 
-  test('Should return 400 if no product value was provided', () => {
+  test('Should return 400 if no product value was provided', async () => {
     const error = new MissingParamError('product.value');
 
     const { sut } = makeSut();
@@ -128,13 +128,13 @@ describe('ParcelProductController Test', () => {
       }
     };
 
-    const response: HttpResponse = sut.handle(request);
+    const response: HttpResponse = await sut.handle(request);
 
     expect(response.statusCode).toBe(400);
     expect(response.body.message).toBe(error.message);
   });
 
-  test('Should return 400 if no paymentCondiction entryValue was provided', () => {
+  test('Should return 400 if no paymentCondiction entryValue was provided', async () => {
     const error = new MissingParamError('paymentCondiction.entryValue');
 
     const { sut } = makeSut();
@@ -153,13 +153,13 @@ describe('ParcelProductController Test', () => {
       }
     };
 
-    const response: HttpResponse = sut.handle(request);
+    const response: HttpResponse = await sut.handle(request);
 
     expect(response.statusCode).toBe(400);
     expect(response.body.message).toBe(error.message);
   });
 
-  test('Should return 400 if no paymentCondiction parcelsQuantity was provided', () => {
+  test('Should return 400 if no paymentCondiction parcelsQuantity was provided', async () => {
     const error = new MissingParamError('paymentCondiction.parcelsQuantity');
 
     const { sut } = makeSut();
@@ -178,13 +178,13 @@ describe('ParcelProductController Test', () => {
       }
     };
 
-    const response: HttpResponse = sut.handle(request);
+    const response: HttpResponse = await sut.handle(request);
 
     expect(response.statusCode).toBe(400);
     expect(response.body.message).toBe(error.message);
   });
 
-  test('Ensure return 400 if invalid product code was provided', () => {
+  test('Ensure return 400 if invalid product code was provided', async () => {
     const error = new InvalidParamError('product.code');
 
     const { sut } = makeSut();
@@ -203,13 +203,13 @@ describe('ParcelProductController Test', () => {
       }
     };
 
-    const response: HttpResponse = sut.handle(request);
+    const response: HttpResponse = await sut.handle(request);
 
     expect(response.statusCode).toBe(400);
     expect(response.body.message).toBe(error.message);
   });
 
-  test('Ensure return 400 if minor or equal to zero product code was provided', () => {
+  test('Ensure return 400 if minor or equal to zero product code was provided', async () => {
     const error = new InvalidParamError('product.code');
 
     const { sut } = makeSut();
@@ -228,13 +228,13 @@ describe('ParcelProductController Test', () => {
       }
     };
 
-    const response: HttpResponse = sut.handle(request);
+    const response: HttpResponse = await sut.handle(request);
 
     expect(response.statusCode).toBe(400);
     expect(response.body.message).toBe(error.message);
   });
 
-  test('Ensure return 400 if invalid product value was provided', () => {
+  test('Ensure return 400 if invalid product value was provided', async () => {
     const error = new InvalidParamError('product.value');
 
     const { sut } = makeSut();
@@ -253,13 +253,13 @@ describe('ParcelProductController Test', () => {
       }
     };
 
-    const response: HttpResponse = sut.handle(request);
+    const response: HttpResponse = await sut.handle(request);
 
     expect(response.statusCode).toBe(400);
     expect(response.body.message).toBe(error.message);
   });
 
-  test('Ensure return 400 if minor of zero value was provided', () => {
+  test('Ensure return 400 if minor of zero value was provided', async () => {
     const error = new InvalidParamError('product.value');
 
     const { sut } = makeSut();
@@ -278,13 +278,13 @@ describe('ParcelProductController Test', () => {
       }
     };
 
-    const response: HttpResponse = sut.handle(request);
+    const response: HttpResponse = await sut.handle(request);
 
     expect(response.statusCode).toBe(400);
     expect(response.body.message).toBe(error.message);
   });
 
-  test('Ensure return 400 if invalid paymentCondiction entryValue was provided', () => {
+  test('Ensure return 400 if invalid paymentCondiction entryValue was provided', async () => {
     const error = new InvalidParamError('paymentCondiction.entryValue');
 
     const { sut } = makeSut();
@@ -303,13 +303,13 @@ describe('ParcelProductController Test', () => {
       }
     };
 
-    const response: HttpResponse = sut.handle(request);
+    const response: HttpResponse = await sut.handle(request);
 
     expect(response.statusCode).toBe(400);
     expect(response.body.message).toBe(error.message);
   });
 
-  test('Ensure return 400 if minor of zero paymentCondiction entryValue was provided', () => {
+  test('Ensure return 400 if minor of zero paymentCondiction entryValue was provided', async () => {
     const error = new InvalidParamError('paymentCondiction.entryValue');
 
     const { sut } = makeSut();
@@ -328,13 +328,13 @@ describe('ParcelProductController Test', () => {
       }
     };
 
-    const response: HttpResponse = sut.handle(request);
+    const response: HttpResponse = await sut.handle(request);
 
     expect(response.statusCode).toBe(400);
     expect(response.body.message).toBe(error.message);
   });
 
-  test('Ensure return 400 if invalid paymentCondiction parcelsQuantity was provided', () => {
+  test('Ensure return 400 if invalid paymentCondiction parcelsQuantity was provided', async () => {
     const error = new InvalidParamError('paymentCondiction.parcelsQuantity');
 
     const { sut } = makeSut();
@@ -353,13 +353,13 @@ describe('ParcelProductController Test', () => {
       }
     };
 
-    const response: HttpResponse = sut.handle(request);
+    const response: HttpResponse = await sut.handle(request);
 
     expect(response.statusCode).toBe(400);
     expect(response.body.message).toBe(error.message);
   });
 
-  test('Ensure return 400 if minor or equal to zero paymentCondiction parcelsQuantity was provided', () => {
+  test('Ensure return 400 if minor or equal to zero paymentCondiction parcelsQuantity was provided', async () => {
     const error = new InvalidParamError('paymentCondiction.parcelsQuantity');
 
     const { sut } = makeSut();
@@ -378,7 +378,7 @@ describe('ParcelProductController Test', () => {
       }
     };
 
-    const response: HttpResponse = sut.handle(request);
+    const response: HttpResponse = await sut.handle(request);
 
     expect(response.statusCode).toBe(400);
     expect(response.body.message).toBe(error.message);
