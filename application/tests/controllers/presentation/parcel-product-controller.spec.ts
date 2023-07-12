@@ -1,6 +1,7 @@
 import { ProductModel } from "../../../src/domain/models/product";
 import { LoadProductResult } from "../../../src/domain/usecases/load-product-result";
 import { ParcelProductController } from "../../../src/presentation/controllers/parcel-product-controller";
+import { InvalidCompatibilityError } from "../../../src/presentation/errors/invalid-compatibity-error";
 import { InvalidParamError } from "../../../src/presentation/errors/invalid-param-error";
 import { MissingParamError } from "../../../src/presentation/errors/missing-param-error";
 import { NotFoundedError } from "../../../src/presentation/errors/not-founded-error";
@@ -13,7 +14,7 @@ interface SutTypes {
 
 const makeLoadProductResult = (): LoadProductResult => {
   class LoadProductResultStub implements LoadProductResult {
-    load(productId: number): Promise<ProductModel> | Promise<boolean> {
+    load(productId: number): Promise<LoadProductResult.Result> {
       return Promise.resolve({
         code: 1,
         name: "valid_name",
@@ -410,7 +411,7 @@ describe('ParcelProductController Test', () => {
 
     const { sut, loadProductResult } = makeSut();
 
-    jest.spyOn(loadProductResult, 'load').mockImplementationOnce((productId: number): Promise<ProductModel> | Promise<boolean> => {
+    jest.spyOn(loadProductResult, 'load').mockImplementationOnce((productId: number): Promise<LoadProductResult.Result> => {
       return Promise.resolve(false);
     });
 
@@ -456,5 +457,30 @@ describe('ParcelProductController Test', () => {
     await sut.handle(request);
 
     expect(loadProductSpy).toHaveBeenCalledWith(parseFloat(request.body.product.code));
+  });
+
+  test('Ensure return 400 if product was not compatible with request', async () => {
+    const error = new InvalidCompatibilityError('code', 'product');
+
+    const { sut } = makeSut();
+
+    const request: HttpRequest = {
+      body: {
+        product: {
+          code: '999',
+          name: 'invalid_name',
+          value: '1'
+        },
+        paymentCondiction: {
+          entryValue: '1',
+          parcelsQuantity: '1'
+        }
+      }
+    };
+
+    const result: HttpResponse = await sut.handle(request);
+
+    expect(result.statusCode).toBe(400);
+    expect(result.body.message).toBe(error.message);
   });
 });
